@@ -3,10 +3,16 @@ package main
 import (
 	"flag"
 	"log"
+
+	"github.com/dcwk/linksaver/src"
+)
+
+const (
+	tgBotHost = "api.telegram.org"
 )
 
 func main() {
-	loadToken()
+	src.New(tgBotHost, loadToken())
 }
 
 func loadToken() string {
