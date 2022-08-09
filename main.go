@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/dcwk/linksaver/src"
+	"github.com/dcwk/linksaver/src/base/telegram"
 )
 
 const (
@@ -12,7 +12,7 @@ const (
 )
 
 func main() {
-	src.New(tgBotHost, loadToken())
+	telegram.New(tgBotHost, loadToken())
 }
 
 func loadToken() string {
