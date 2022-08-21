@@ -1,6 +1,8 @@
 package processor
 
 import (
+	"errors"
+
 	"github.com/dcwk/linksaver/src/base/telegram"
 	"github.com/dcwk/linksaver/src/events"
 	e "github.com/dcwk/linksaver/src/infrastructure/error"
@@ -17,6 +19,9 @@ type Meta struct {
 	ChatID   int
 	UserName string
 }
+
+var ErrUnknownEventType = errors.New("Unknown event type")
+var ErrUnknownMetaType - errors.New("Unknown meta type")
 
 func New(client *telegram.Client, storage storage.Storage) *Processor {
 	return &Processor{
@@ -43,6 +48,16 @@ func (p *Processor) Fetch(limit int) ([]events.Event, error) {
 	p.offset = updates[len(updates)-1].ID + 1
 
 	return events, nil
+}
+
+func (p *Processor) Process(event events.Event) error {
+	switch event.Type {
+	case events.Message:
+		p.processMessage(event)
+	default:
+		return e.Wrap("Cant't process message", ErrUnknownEventType)
+
+	}
 }
 
 func event(update telegram.Update) events.Event {
@@ -76,4 +91,20 @@ func fetchType(update telegram.Update) events.Type {
 	}
 
 	return events.Message
+}
+
+func processMessage(event events.Event) {
+	meta, err := meta(event)
+	if err != nil {
+		return e.Wrap("Can't proccess message", err)
+	}
+}
+
+func meta(event events.Event) (Meta, error) {
+	res, ok := event.Meta.(Meta)
+	if !ok {
+		return Meta{}, e.Wrap("Can't get meta", ErrUnknownMetaType)
+	}
+
+	return res, nil
 }
