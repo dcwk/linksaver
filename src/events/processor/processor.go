@@ -5,7 +5,6 @@ import (
 	"github.com/dcwk/linksaver/src/events"
 	e "github.com/dcwk/linksaver/src/infrastructure/error"
 	"github.com/dcwk/linksaver/src/infrastructure/storage"
-	"github.com/docker/docker/api/types/events"
 )
 
 type Processor struct {
